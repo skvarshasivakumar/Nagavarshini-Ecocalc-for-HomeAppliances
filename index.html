@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Appliance Carbon Emission Calculator</title>
+    <style>
+        body {
+            background-color: #4CAF50; 
+           
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: green;
+            border-radius: 5px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        select,
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+<br>
+<br>
+<br>
+        <h1>Home Appliance Carbon Emission Calculator</h1>
+	<img src="logo.png" width=150px height=80px>
+        <form id="carbonCalculator">
+            <div class="form-group">
+                <label for="appliance">Select Appliance:</label>
+                <select class="form-control" id="appliance">
+                    <option value="fridge">Refrigerator</option>
+                    <option value="washing_machine">Washing Machine</option>
+                    <option value="television">Television</option>
+                    <!-- Add more appliance options here -->
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="usageHours">Average Daily Usage (hours):</label>
+                <input style="width:80%;" type="number" class="form-control" id="usageHours" placeholder="Enter average daily usage hours">
+            </div>
+            <div class="form-group">
+                <label>Energy Source:</label>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="energySource" id="grid" value="grid" checked>
+                    <label class="form-check-label" for="grid">Grid</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="energySource" id="solar" value="solar">
+                    <label class="form-check-label" for="solar">Solar</label>
+                </div>
+            </div>
+            <button type="button" class="btn btn-primary" id="calculateButton">Calculate</button>
+        </form>
+        <div class="mt-3" id="result"></div>
+    </div>
+
+    <script>
+       
+        const CO2_PER_KWH_GRID = 0.475; 
+        const CO2_PER_KWH_SOLAR = 0.015; 
+
+        function calculateCarbonEmission(appliance, usageHours, energySource) {
+            let powerConsumption;
+
+     
+            switch (appliance) {
+                case "fridge":
+                    powerConsumption = 150; 
+                    break;
+                case "washing_machine":
+                    powerConsumption = 500; 
+                    break;
+                case "television":
+                    powerConsumption = 100; 
+                    break;
+
+                default:
+                    throw new Error("Invalid appliance selection.");
+            }
+
+         
+            const energyConsumption = (powerConsumption / 1000) * usageHours;
+
+           
+            let emissions;
+            switch (energySource) {
+                case "grid":
+                    emissions = energyConsumption * CO2_PER_KWH_GRID;
+                    break;
+                case "solar":
+                    emissions = energyConsumption * CO2_PER_KWH_SOLAR;
+                    break;
+                default:
+                    throw new Error("Invalid energy source selection.");
+            }
+
+            return emissions.toFixed(2);
+        }
+
+   document.getElementById("calculateButton").addEventListener("click", function () {
+            const appliance = document.getElementById("appliance").value;
+            const usageHours = parseFloat(document.getElementById("usageHours").value);
+            const energySource = document.querySelector('input[name="energySource"]:checked').value;
+
+            if (!isNaN(usageHours)) {
+                const emissions = calculateCarbonEmission(appliance, usageHours, energySource);
+                document.getElementById("result").innerHTML = `Estimated Carbon Emissions: ${emissions} kg CO2 per day`;
+            } else {
+                document.getElementById("result").innerHTML = "Please enter valid input values.";
+            }
+        });
+    </script>
+</body>
+</html>
